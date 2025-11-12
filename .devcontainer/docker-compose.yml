@@ -1,0 +1,84 @@
+services:
+  nipapd:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    image: nipap-dev
+    volumes:
+      - ../:/workspace:cached
+      - ./etc/nipap.conf:/etc/nipap/nipap.conf
+    ports:
+      - "1337:1337"
+    depends_on:
+      - db
+      - kafka
+      - kafdrop
+    working_dir: /workspace/
+    command: sleep infinity
+    user: "nipap"
+    restart: unless-stopped
+
+  nipap-www:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    image: nipap-dev
+    volumes:
+      - ./etc/nipap.conf:/etc/nipap/nipap.conf
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+      - kafka
+      - kafdrop
+    command: sleep infinity
+    user: "nipap"
+    restart: unless-stopped
+
+  db:
+    build:
+      context: ./postgres
+      dockerfile: Dockerfile
+    image: nipap-postgres
+    environment:
+      - POSTGRES_USER=nipap
+      - POSTGRES_PASSWORD=papin
+      - POSTGRES_DB=nipap
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nipap"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  kafdrop:
+    image: obsidiandynamics/kafdrop:latest
+    restart: "no"
+    ports:
+      - "9000:9000"
+    environment:
+      KAFKA_BROKERCONNECT: "kafka:29092"
+      SERVER_SERVLET_CONTEXTPATH: "/"
+    depends_on:
+      - "kafka"
+  kafka:
+    image: obsidiandynamics/kafka:latest
+    restart: "no"
+    ports:
+      - "2181:2181"
+      - "9092:9092"
+    environment:
+      KAFKA_LISTENERS: "INTERNAL://:29092,EXTERNAL://:9092"
+      KAFKA_ADVERTISED_LISTENERS: "INTERNAL://kafka:29092,EXTERNAL://localhost:9092"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT"
+      KAFKA_INTER_BROKER_LISTENER_NAME: "INTERNAL"
+      KAFKA_ZOOKEEPER_SESSION_TIMEOUT: "6000"
+      KAFKA_RESTART_ATTEMPTS: "10"
+      KAFKA_RESTART_DELAY: "5"
+      ZOOKEEPER_AUTOPURGE_PURGE_INTERVAL: "0"
+volumes:
+  db-data:

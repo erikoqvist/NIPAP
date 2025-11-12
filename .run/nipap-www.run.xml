@@ -1,0 +1,20 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="nipap-www" type="Python.FlaskServer">
+    <option name="additionalOptions" value="--host=0.0.0.0" />
+    <module name="NIPAP" />
+    <option name="target" value="$PROJECT_DIR$/nipap-www/nipapwww/__init__.py" />
+    <option name="targetType" value="PATH" />
+    <option name="ENV_FILES" value="" />
+    <option name="INTERPRETER_OPTIONS" value="" />
+    <option name="PARENT_ENVS" value="true" />
+    <option name="SDK_HOME" value="" />
+    <option name="SDK_NAME" value="Remote Python 3.11.14 Docker Compose (nipap-www)" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+    <option name="IS_MODULE_SDK" value="false" />
+    <option name="ADD_CONTENT_ROOTS" value="true" />
+    <option name="ADD_SOURCE_ROOTS" value="true" />
+    <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+    <option name="launchJavascriptDebuger" value="false" />
+    <method v="2" />
+  </configuration>
+</component>

@@ -39,6 +39,38 @@ http://SpriteLink.github.io/NIPAP
 
 Getting started
 ---------------
+**Quick start with Docker Compose (development / devcontainer):**
+The provided Docker Compose file in .devcontainer starts all supporting
+services (Postgres, Kafka, kafdrop) and builds a development image for the
+backend and web UI. For IDE/devcontainer workflows the nipapd and nipap-www
+services are left running `sleep infinity` so you can exec into the containers
+and start the processes the same way your IDE would.
+
+1) Start the containers (db and infrastructure):
+   
+    docker-compose -f .devcontainer/docker-compose.yml up -d
+
+2) Start the backend (nipapd) inside the running nipapd container:
+
+    docker-compose -f .devcontainer/docker-compose.yml exec -d -u nipap nipapd \
+      python /workspace/nipap/nipap/nipapd.py --debug --foreground --auto-install-db --auto-upgrade-db --no-pid-file
+
+3) Start the web UI (nipap-www) inside the running nipap-www container:
+
+    docker-compose -f .devcontainer/docker-compose.yml exec -d -u nipap nipap-www \
+      python -m flask --app nipapwww --debug run --host=0.0.0.0
+
+Notes:
+ - The image sets WORKDIR to /workspace and PYTHONPATH appropriately, so the
+   paths above point to the same files used by the IDE run configurations.
+ - If you want to attach to the processes and see logs in your terminal,
+   omit the `-d` flag on the `exec` commands (or run them in separate terminals).
+ - After starting the services the web UI will be available at
+   http://localhost:5000 and the backend XML-RPC API at http://localhost:1337.
+See the `Docker Compose quick start guide <docs/getting-started-docker-compose.rst>`_
+for more details.
+
+**Traditional installation:**
 If you are running Ubuntu / Debian, add the following repo:
 
     deb http://spritelink.github.io/NIPAP/repos/apt stable main extra

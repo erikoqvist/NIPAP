@@ -1,0 +1,16 @@
+{
+  "name": "NIPAP Dev Container",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "nipapd",
+  "workspaceFolder": "/workspace",
+  "customizations": {},
+  "features": {},
+  "forwardPorts": [
+    1337,
+    5000
+  ],
+  "remoteUser": "nipap",
+  "mounts": [
+    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+  ]
+}
