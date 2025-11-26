@@ -24,6 +24,7 @@ services:
       dockerfile: .devcontainer/Dockerfile
     image: nipap-dev
     volumes:
+      - ../:/workspace:cached
       - ./etc/nipap.conf:/etc/nipap/nipap.conf
     ports:
       - "5000:5000"
